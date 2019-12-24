@@ -31,7 +31,19 @@ def index():
             return "There was a problem adding new stuff."
     else:
         groceries = Grocery.query.order_by(Grocery.created_at.desc()).all()
-        return render_template('index.html', groceries=groceries)    
+        return render_template('index.html', groceries=groceries)
+
+
+@app.route('/delete/<int:id>')
+def delete(id):
+    grocery = Grocery.query.get_or_404(id)
+
+    try:
+        db.session.delete(grocery)
+        db.session.commit()
+        return redirect('/')
+    except:
+        return "There was a problem deleting data."
 
 
 if __name__ == '__main__':
