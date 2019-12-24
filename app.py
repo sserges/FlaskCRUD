@@ -19,8 +19,19 @@ class Grocery(db.Model):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if req
-    return render_template('index.html')
+    if request.method == 'POST':
+        name = request.form['name']
+        new_stuff = Grocery(name=name)
+
+        try:
+            db.session.add(new_stuff)
+            db.session.commit()
+            return redirect('/')
+        except:
+            return "There was a problem adding new stuff."
+    else:
+        groceries = Grocery.query.order_by(Grocery.created_at.desc()).all()
+        return render_template('index.html', groceries=groceries)    
 
 
 if __name__ == '__main__':
