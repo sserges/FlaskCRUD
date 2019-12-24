@@ -34,6 +34,23 @@ def index():
         return render_template('index.html', groceries=groceries)
 
 
+@app.route('/update/<int:id>', methods=['GET', 'POST'])
+def update(id):
+    grocery = Grocery.query.get_or_404(id)
+
+    if request.method == 'POST':
+        grocery.name = request.form['name']
+
+        try:
+            db.session.commit()
+            return redirect('/')
+        except:
+            return "There was a problem updating data."
+    else:
+        title = "Update Data"
+        return render_template('update.html', title=title, grocery=grocery)
+
+
 @app.route('/delete/<int:id>')
 def delete(id):
     grocery = Grocery.query.get_or_404(id)
